@@ -1,51 +1,102 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const canvasOn = new fabric.Canvas('on');
-    const canvasArka = new fabric.Canvas('arka');
-    let currentCanvas = canvasOn;
+ 
+        // Fabric.js initialization
+        var canvas = new fabric.Canvas('canvas');
 
-    // Function to set the current canvas
-    function setCanvas(name) {
-        document.querySelectorAll('canvas').forEach(c => c.classList.remove('active'));
-        if (name === 'on') {
-            currentCanvas = canvasOn;
-            document.getElementById('on').classList.add('active');
-        } else {
-            currentCanvas = canvasArka;
-            document.getElementById('arka').classList.add('active');
+        // Load t-shirt front and back images
+        function loadTshirtDesign() {
+            fabric.Image.fromURL('https://raw.githubusercontent.com/RidwanAhmed6/print-tshirt/main/images/templates/front-t-shirt.png', function (img) {
+                img.scaleToHeight(450);
+                img.scaleToWidth(450);
+                canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+            });
         }
-    }
 
-    // Expose setCanvas function to global scope
-    window.setCanvas = setCanvas;
-
-    // Function to handle zooming
-    function zoom(direction) {
-        const zoomFactor = direction === 'in' ? 1.1 : 0.9;
-        currentCanvas.setZoom(currentCanvas.getZoom() * zoomFactor);
-    }
-
-    // Expose zoom function to global scope
-    window.zoom = zoom;
-
-    // Function to handle image upload
-    document.getElementById('imgLoader').addEventListener('change', function (e) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            const imgObj = new Image();
-            imgObj.src = event.target.result;
-            imgObj.onload = function () {
-                const image = new fabric.Image(imgObj);
-                image.set({
-                    left: 50,
-                    top: 50,
-                    angle: 0,
-                    padding: 10,
-                    cornersize: 10
-                });
-                image.scaleToWidth(200); // Adjust image size as needed
-                currentCanvas.add(image);
-            };
+        document.getElementById('imgLoader').onchange = function handleImage(e) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var imgObj = new Image();
+                imgObj.src = event.target.result;
+                imgObj.onload = function () {
+                    var image = new fabric.Image(imgObj);
+                    image.set({ left: 100, top: 100, angle: 0, padding: 10, cornersize: 10 });
+                    canvas.add(image);
+                }
+            }
+            reader.readAsDataURL(e.target.files[0]);
         };
-        reader.readAsDataURL(e.target.files[0]);
-    });
-});
+
+        function textPanel() {
+            document.querySelector('.textPanel').style.display = 'block';
+        }
+
+        function updateFontText() {
+            var activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'text') {
+                activeObject.set({ text: document.getElementById('fontText').value });
+                canvas.renderAll();
+            }
+        }
+
+        function textBold() {
+            var activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'text') {
+                activeObject.set({ fontWeight: activeObject.fontWeight === 'bold' ? 'normal' : 'bold' });
+                canvas.renderAll();
+            }
+        }
+
+        function textItalic() {
+            var activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'text') {
+                activeObject.set({ fontStyle: activeObject.fontStyle === 'italic' ? 'normal' : 'italic' });
+                canvas.renderAll();
+            }
+        }
+
+        function textUnderLine() {
+            var activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'text') {
+                activeObject.set({ underline: !activeObject.underline });
+                canvas.renderAll();
+            }
+        }
+
+        function updateFontFamily() {
+            var activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'text') {
+                activeObject.set({ fontFamily: document.getElementById('fontFamily').value });
+                canvas.renderAll();
+            }
+        }
+
+        function updateFontColor() {
+            var activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'text') {
+                activeObject.set({ fill: document.getElementById('fontColor').value });
+                canvas.renderAll();
+            }
+        }
+
+        function changeColor(color) {
+            // Change T-shirt color
+        }
+
+        function changeSize(size) {
+            // Change T-shirt size
+        }
+
+        $('#zoomIn').on('click', function () {
+            canvas.setZoom(canvas.getZoom() * 1.1);
+        });
+
+        $('#zoomOut').on('click', function () {
+            canvas.setZoom(canvas.getZoom() / 1.1);
+        });
+
+        $('#clear').on('click', function () {
+            canvas.clear();
+            loadTshirtDesign(); // Reload t-shirt design after clearing
+        });
+
+        loadTshirtDesign(); // Initial load of t-shirt design
+    
