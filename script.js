@@ -4,7 +4,7 @@
 
         // Load t-shirt front and back images
         function loadTshirtDesign() {
-            fabric.Image.fromURL('https://raw.githubusercontent.com/RidwanAhmed6/print-tshirt/main/images/templates/front-t-shirt.png', function (img) {
+            fabric.Image.fromURL('images/templates/front-t-shirt.png', function (img) {
                 img.scaleToHeight(450);
                 img.scaleToWidth(450);
                 canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
