@@ -1,9 +1,0 @@
-build
-dist
-/src/media
-node_modules
-.DS_Store
-.env
-*.log
-*.lock
-.idea
